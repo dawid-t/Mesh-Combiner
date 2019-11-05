@@ -4,12 +4,11 @@
 ![Mesh Combiner](https://i.imgur.com/tpaPW6T.png)
 
 ## Tutorial video:
-https://youtu.be/d-Q4nD4bxjg
+https://youtu.be/PxkthEMiEQI
 
 
 ### Video content:
-https://i.imgur.com/uP0v8Oi.png
-![Video content](https://i.imgur.com/uP0v8Oi.png)
+![Video content](https://i.imgur.com/1Qe6RYK.png)
 
 ### Mesh combining via code example from video:
 ![Code example](https://i.imgur.com/OR2v1zY.png)

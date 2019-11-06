@@ -7,11 +7,11 @@
 https://youtu.be/PxkthEMiEQI
 
 
-### Video content:
+### The video content:
 ![Video content](https://i.imgur.com/1Qe6RYK.png)
 
-### Mesh combining via code example from video:
+### Mesh combining via code example from the video:
 ![Code example](https://i.imgur.com/OR2v1zY.png)
 
-### Optimisation example from video:
+### Optimization example from the video:
 ![Optimisation example](https://i.imgur.com/KPSI1bE.png)

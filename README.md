@@ -1,5 +1,8 @@
 # Mesh Combiner for Unity
-**Mesh Combiner** is a little script which can **combine different meshes into one mesh** for reduce the amount of batches / draw calls, making your game more optimized.
+**Mesh Combiner** is a little tool which can **combine different meshes into one mesh** for reduce the amount of batches / draw calls, making your game more optimized.
+
+<a href="https://assetstore.unity.com/packages/tools/modeling/mesh-combiner-157192"><b>Download on Asset Store</b></a>
+
 
 ![Mesh Combiner](https://i.imgur.com/tpaPW6T.png)
 

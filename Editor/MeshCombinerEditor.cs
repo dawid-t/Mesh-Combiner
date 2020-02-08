@@ -131,7 +131,7 @@ public class MeshCombinerEditor : Editor
 
 			AssetDatabase.CreateAsset(mesh, meshPath);
 			AssetDatabase.SaveAssets();
-			Debug.Log("<color=orange>Mesh \""+mesh.name+"\" is saved in the \""+folderPath+"\" folder.</color>"); // Show info about saved mesh.
+			Debug.Log("<color=#ff9900><b>Mesh \""+mesh.name+"\" was saved in the \""+folderPath+"\" folder.</b></color>"); // Show info about saved mesh.
 		}
 		#endregion Save Mesh.
 

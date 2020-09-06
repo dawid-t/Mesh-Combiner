@@ -2,6 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using Ludiq;
+using UnityEditor;
+#endif
+
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class MeshCombiner : MonoBehaviour
@@ -138,6 +143,13 @@ public class MeshCombiner : MonoBehaviour
 	{
 		// Get all MeshFilters belongs to this GameObject and its children:
 		MeshFilter[] meshFilters = GetMeshFiltersToCombine();
+		
+#if UNITY_EDITOR
+		Undo.IncrementCurrentGroup();
+		Undo.SetCurrentGroupName("Combine Meshes");
+		var undoGroupIndex = Undo.GetCurrentGroup();
+		UndoUtility.RecordObject(meshFilters[0], "");
+#endif
 
 		// First MeshFilter belongs to this GameObject so we don't need it:
 		CombineInstance[] combineInstances = new CombineInstance[meshFilters.Length-1];
@@ -211,6 +223,10 @@ public class MeshCombiner : MonoBehaviour
 				+" 2017.3 or higher to avoid this limit (some old devices, like Android with Mali-400 GPU, do not support over 65535 vertices).</b></color>");
 		}
 		#endif
+		
+#if UNITY_EDITOR
+		Undo.CollapseUndoOperations(undoGroupIndex);
+#endif
 	}
 
 	private void CombineMeshesWithMutliMaterial(bool showCreatedMeshInfo)
@@ -219,6 +235,13 @@ public class MeshCombiner : MonoBehaviour
 		MeshFilter[] meshFilters = GetMeshFiltersToCombine();
 		MeshRenderer[] meshRenderers = new MeshRenderer[meshFilters.Length];
 		meshRenderers[0] = GetComponent<MeshRenderer>(); // Our (parent) MeshRenderer.
+
+#if UNITY_EDITOR
+		Undo.IncrementCurrentGroup();
+		Undo.SetCurrentGroupName("Combine Meshes");
+		var undoGroupIndex = Undo.GetCurrentGroup();
+		UndoUtility.RecordObject(meshFilters[0], "");
+#endif
 
 		List<Material> uniqueMaterialsList = new List<Material>();
 		for(int i = 0; i < meshFilters.Length-1; i++)
@@ -348,6 +371,11 @@ public class MeshCombiner : MonoBehaviour
 				+" 2017.3 or higher to avoid this limit (some old devices, like Android with Mali-400 GPU, do not support over 65535 vertices).</b></color>");
 		}
 		#endif
+		
+#if UNITY_EDITOR
+		Undo.CollapseUndoOperations(undoGroupIndex);
+#endif
+
 		#endregion Set Materials array & combine submeshes into one multimaterial Mesh.
 	}
 
@@ -355,6 +383,9 @@ public class MeshCombiner : MonoBehaviour
 	{
 		for(int i = 0; i < meshFilters.Length-1; i++) // Skip first MeshFilter belongs to this GameObject in this loop.
 		{
+#if UNITY_EDITOR
+			UndoUtility.RecordObject(meshFilters[i+1].gameObject, "");
+#endif
 			if(!destroyCombinedChildren)
 			{
 				if(deactivateCombinedChildren)
@@ -366,13 +397,25 @@ public class MeshCombiner : MonoBehaviour
 					MeshRenderer meshRenderer = meshFilters[i+1].gameObject.GetComponent<MeshRenderer>();
 					if(meshRenderer != null)
 					{
+#if UNITY_EDITOR
+						UndoUtility.RecordObject(meshRenderer, "");
+#endif
 						meshRenderer.enabled = false;
 					}
 				}
 			}
 			else
 			{
+#if UNITY_EDITOR
+				if (meshFilters[i+1].gameObject.IsPrefabInstance()) {
+					Debug.Log("<color=#ff3300><b>Unable to destroy object " + meshFilters[i + 1].gameObject.name + " as it is inside of a prefab instance</b></color>");
+					continue;
+				}
+				
+				Undo.DestroyObjectImmediate(meshFilters[i+1].gameObject);
+#else
 				DestroyImmediate(meshFilters[i+1].gameObject);
+#endif
 			}
 		}
 	}

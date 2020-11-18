@@ -10,7 +10,7 @@ public class MeshCombiner : MonoBehaviour
 
 	[SerializeField]
 	private bool createMultiMaterialMesh = false, combineInactiveChildren = false, deactivateCombinedChildren = true,
-		deactivateCombinedChildrenMeshRenderers = false, destroyCombinedChildren = false;
+		deactivateCombinedChildrenMeshRenderers = false, generateUVMap = false, destroyCombinedChildren = false;
 	[SerializeField]
 	private string folderPath = "Prefabs/CombinedMeshes";
 	[SerializeField]
@@ -37,6 +37,7 @@ public class MeshCombiner : MonoBehaviour
 			CheckDeactivateCombinedChildren();
 		}
 	}
+	public bool GenerateUVMap { get { return generateUVMap; } set { generateUVMap = value; } }
 	public bool DestroyCombinedChildren
 	{
 		get { return destroyCombinedChildren; }
@@ -176,6 +177,7 @@ public class MeshCombiner : MonoBehaviour
 		}
 
 		combinedMesh.CombineMeshes(combineInstances);
+		GenerateUV(combinedMesh);
 		meshFilters[0].sharedMesh = combinedMesh;
 		DeactivateCombinedGameObjects(meshFilters);
 
@@ -196,6 +198,7 @@ public class MeshCombiner : MonoBehaviour
 		if(verticesLength <= Mesh16BitBufferVertexLimit)
 		{
 			combinedMesh.CombineMeshes(combineInstances);
+			GenerateUV(combinedMesh);
 			meshFilters[0].sharedMesh = combinedMesh;
 			DeactivateCombinedGameObjects(meshFilters);
 
@@ -312,6 +315,7 @@ public class MeshCombiner : MonoBehaviour
 		}
 
 		combinedMesh.CombineMeshes(finalMeshCombineInstancesList.ToArray(), false);
+		GenerateUV(combinedMesh);
 		meshFilters[0].sharedMesh = combinedMesh;
 		DeactivateCombinedGameObjects(meshFilters);
 
@@ -333,6 +337,7 @@ public class MeshCombiner : MonoBehaviour
 		if(verticesLength <= Mesh16BitBufferVertexLimit)
 		{
 			combinedMesh.CombineMeshes(finalMeshCombineInstancesList.ToArray(), false);
+			GenerateUV(combinedMesh);
 			meshFilters[0].sharedMesh = combinedMesh;
 			DeactivateCombinedGameObjects(meshFilters);
 
@@ -375,5 +380,17 @@ public class MeshCombiner : MonoBehaviour
 				DestroyImmediate(meshFilters[i+1].gameObject);
 			}
 		}
+	}
+
+	private void GenerateUV(Mesh combinedMesh)
+	{
+		#if UNITY_EDITOR
+		if(generateUVMap)
+		{
+			UnityEditor.UnwrapParam unwrapParam = new UnityEditor.UnwrapParam();
+			UnityEditor.UnwrapParam.SetDefaults(out unwrapParam);
+			UnityEditor.Unwrapping.GenerateSecondaryUVSet(combinedMesh, unwrapParam);
+		}
+		#endif
 	}
 }
